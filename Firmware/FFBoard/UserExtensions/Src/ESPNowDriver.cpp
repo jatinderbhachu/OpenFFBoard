@@ -171,13 +171,15 @@ void ESPNowDriver::Run() {
     switch (event.type) {
     case EventType::Receive: {
       if (cmd_type == CmdType::Connect) {
-        // TODO: verify protocol version before responding
         ESP_LOGI(TAG, "Got connect request from %02X:%02X:%02X:%02X:%02X:%02X",
                  address[0], address[1], address[2], address[3], address[4],
                  address[5]);
         mConnected = true;
-        add_client(address);
-        send_connect_ack();
+        uint8_t protocol_ver = data[1];
+        if(protocol_ver == ESPNOW_PROTOCOL_VERSION) {
+          add_client(address);
+          send_connect_ack();
+        }
       } else if (cmd_type == CmdType::EncoderPos) {
         float pos = *(float *)&data[1];
         mPos = pos;
