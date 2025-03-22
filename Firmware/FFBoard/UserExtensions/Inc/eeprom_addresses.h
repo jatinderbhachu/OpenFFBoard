@@ -221,4 +221,9 @@ uint16_t EE_ReadVariable(uint16_t VirtAddress, uint16_t* Data) will return 1 if 
 #define ADR_ADS111X_MAX_2 0x515
 #define ADR_ADS111X_MIN_3 0x516
 #define ADR_ADS111X_MAX_3 0x517
+// ESPNowDriver
+#define ESPNOW_DRV_CONTROLLER_ADDR_0 0x550 // 6-byte mac address of the paired controller 
+#define ESPNOW_DRV_CONTROLLER_ADDR_1 0x551
+#define ESPNOW_DRV_CONTROLLER_ADDR_2 0x552
+#define ESPNOW_DRV_PROTOCOL_VERSION  0x553
 #endif /* EEPROM_ADDRESSES_H_ */

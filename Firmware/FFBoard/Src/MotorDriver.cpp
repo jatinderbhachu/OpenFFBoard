@@ -14,6 +14,7 @@
 #include "VescCAN.h"
 #include "MotorSimplemotion.h"
 #include "RmdMotorCAN.h"
+#include "ESPNowDriver.h"
 
 ClassIdentifier MotorDriver::info ={.name = "None" , .id=CLSID_MOT_NONE, .visibility = ClassVisibility::visible};
 
@@ -50,6 +51,9 @@ const std::vector<class_entry<MotorDriver>> MotorDriver::all_drivers =
 #ifdef RMDCAN
 	add_class<RmdMotorCAN1,MotorDriver>(11),
 	add_class<RmdMotorCAN2,MotorDriver>(12),
+#endif
+#ifdef ESPNOW
+	add_class<ESPNowDriver_1,MotorDriver>(14),
 #endif
 };
 

@@ -1,4 +1,5 @@
 #include "cppmain.h"
+#include "ESPNowDriverProtocol.h"
 #include "cmsis_os.h"
 #include "cpp_target_config.h"
 #include "driver/gpio.h"
@@ -17,10 +18,6 @@
 #include "nvs_flash.h"
 #include <esp_private/wifi.h>
 
-// #include "tinyusb.h"
-// #include "usb_descriptors.h"
-
-// #include <rtc_wdt.h>
 #include "main.h"
 #include "mainclass_chooser.h"
 #include "tusb.h"
@@ -57,13 +54,12 @@ void cppmain() {
   static usb_phy_handle_t phy_hdl;
 
   // Configure USB PHY
-  usb_phy_config_t phy_conf = {
+  usb_phy_config_t phy_conf{
       .controller = USB_PHY_CTRL_OTG,
       .target = USB_PHY_TARGET_INT,
       .otg_mode = USB_OTG_MODE_DEVICE,
       // .otg_speed = USB_PHY_SPEED_UNDEFINED, // autodetect
-      .otg_speed = USB_PHY_SPEED_FULL
-  };
+      .otg_speed = USB_PHY_SPEED_FULL};
 
   usb_new_phy(&phy_conf, &phy_hdl);
 
@@ -104,23 +100,23 @@ void cppmain() {
     HAL_CAN_Start(&hcan1);
   }
 
-  // {
-  //   ESP_ERROR_CHECK(esp_netif_init());
-  //   ESP_ERROR_CHECK(esp_event_loop_create_default());
-  //   wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
-  //   cfg.ampdu_tx_enable = 0;
-  //   ESP_ERROR_CHECK(esp_wifi_init(&cfg));
-  //   ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
-  //   ESP_ERROR_CHECK(esp_wifi_set_mode(ESPNOW_WIFI_MODE));
-  //   ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));
-  //   ESP_ERROR_CHECK(esp_wifi_start());
-  //   ESP_ERROR_CHECK(
-  //       esp_wifi_set_channel(ESPNOW_CHANNEL, WIFI_SECOND_CHAN_NONE));
-  //   ESP_ERROR_CHECK(esp_wifi_internal_set_fix_rate(ESPNOW_WIFI_IF, true,
-  //                                                  ESPNOW_WIFI_PHY_RATE));
-  //   ESP_ERROR_CHECK(esp_now_init());
-  //   ESP_ERROR_CHECK(esp_now_set_pmk((uint8_t *)ESPNOW_PMK));
-  // }
+  {
+    ESP_ERROR_CHECK(esp_netif_init());
+    ESP_ERROR_CHECK(esp_event_loop_create_default());
+    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
+    cfg.ampdu_tx_enable = 0;
+    ESP_ERROR_CHECK(esp_wifi_init(&cfg));
+    ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
+    ESP_ERROR_CHECK(esp_wifi_set_mode(ESPNOW_WIFI_MODE));
+    ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));
+    ESP_ERROR_CHECK(esp_wifi_start());
+    ESP_ERROR_CHECK(
+        esp_wifi_set_channel(ESPNOW_CHANNEL, WIFI_SECOND_CHAN_NONE));
+    ESP_ERROR_CHECK(esp_wifi_internal_set_fix_rate(ESPNOW_WIFI_IF, true,
+                                                   ESPNOW_WIFI_PHY_RATE));
+    ESP_ERROR_CHECK(esp_now_init());
+    ESP_ERROR_CHECK(esp_now_set_pmk((uint8_t *)ESPNOW_PMK));
+  }
 
   // ------------------------
 
