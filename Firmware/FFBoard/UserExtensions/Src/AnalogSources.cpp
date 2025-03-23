@@ -9,6 +9,7 @@
 #include "LocalAnalog.h"
 #include "CanAnalog.h"
 #include "ADS111X.h"
+#include "ESPNowAnalog.h"
 
 // Register possible analog sources (id 0-15)
 #ifndef ANALOGSOURCES_DEFAULT_OVERRIDE
@@ -22,6 +23,9 @@ const std::vector<class_entry<AnalogSource>> AnalogSource::all_analogsources =
 #endif
 #ifdef ADS111XANALOG
 		add_class<ADS111X_AnalogSource,AnalogSource>(2),
+#endif
+#ifdef ESPNOW
+		add_class<ESPNowAnalog,AnalogSource>(3),
 #endif
 };
 #endif

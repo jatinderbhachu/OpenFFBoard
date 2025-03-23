@@ -5,11 +5,12 @@
  *      Author: Jatinder
  */
 
-#ifndef USEREXTENSIONS_SRC_ESPNOW_H_
-#define USEREXTENSIONS_SRC_ESPNOW_H_
+#ifndef USEREXTENSIONS_SRC_ESPNOW_DRIVER_H_
+#define USEREXTENSIONS_SRC_ESPNOW_DRIVER_H_
 #include "CommandHandler.h"
 #include "ESPNowDriverProtocol.h"
 #include "Encoder.h"
+#include "FastAvg.h"
 #include "MotorDriver.h"
 #include "PersistentStorage.h"
 #include "thread.hpp"
@@ -17,6 +18,11 @@
 #ifdef ESPNOW
 #define ESPNOW_THREAD_MEM 512
 #define ESPNOW_THREAD_PRIO 25 // Must be higher than main thread
+
+enum class ESPNowDriver_commands : uint32_t {
+  pos_update_rate,
+  torque_update_rate,
+};
 
 class ESPNowDriver : public MotorDriver,
                      public PersistentStorage,
@@ -57,23 +63,16 @@ public:
   };
 
 private:
-  void add_client(const uint8_t *address);
-  void remove_client(const std::array<uint8_t, ESP_NOW_ETH_ALEN> &address);
-
-  void send_connect_ack();
-
-  static void espnow_recv_cb(const esp_now_recv_info_t *recv_info,
-                             const uint8_t *data, int len);
-  static void espnow_task(void *param);
-
-  int64_t mLastConnectAttempt = 0;
-  bool mActive = false;
   bool mConnected = false;
   float mPos = 0.0f;
   float mPosOffset = 0.0f;
   float mLastOPos = 0.0f;
 
-private:
+  FastMovingAverage<float> mPosUpdateAvg{40};
+  uint64_t mLastPosUpdate = 0;
+  FastMovingAverage<float> mTorqueUpdateAvg{40};
+  uint64_t mLastTorqueUpdate = 0;
+
   std::array<uint8_t, ESP_NOW_ETH_ALEN> mControllerAddress;
 };
 
@@ -91,5 +90,5 @@ public:
   static bool inUse;
 };
 
-#endif /* USEREXTENSIONS_SRC_ESPNOW_H_ */
+#endif /* USEREXTENSIONS_SRC_ESPNOW_DRIVER_H_ */
 #endif

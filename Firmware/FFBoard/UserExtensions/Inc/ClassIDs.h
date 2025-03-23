@@ -51,6 +51,7 @@ enum class ClassType : uint16_t {
 #define CLSID_BTN_SHIFTER 	0x23
 #define CLSID_BTN_PCF	 	0x24
 #define CLSID_BTN_CAN	 	0x25
+#define CLSID_BTN_ESPNOW 	0x26
 
 
 // Analog sources
@@ -58,6 +59,7 @@ enum class ClassType : uint16_t {
 #define CLSID_ANALOG_LOCAL 	0x41
 #define CLSID_ANALOG_CAN	0x42
 #define CLSID_ANALOG_ADS111X	0x43
+#define CLSID_ANALOG_ESPNOW	0x44
 
 // Encoders
 #define CLSID_ENCODER_NONE	0x60
@@ -89,6 +91,7 @@ enum class ClassType : uint16_t {
 
 #define CLSID_CANPORT		0xC01
 #define CLSID_I2CPORT		0xC02
+#define CLSID_ESPNOW		0xC03
 
 #define CLSID_CUSTOM		0x539 // Reserved for testing
 

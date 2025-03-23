@@ -7,6 +7,7 @@
 #include "constants.h"
 #include "SPIButtons.h"
 #include "CanButtons.h"
+#include "ESPNowButtons.h"
 #include "LocalButtons.h"
 #include <ShifterAnalog.h>
 #include "PCF8574.h"
@@ -32,6 +33,9 @@ const std::vector<class_entry<ButtonSource>> ButtonSource::all_buttonsources =
 #endif
 #ifdef CANBUTTONS
 		add_class<CanButtons,ButtonSource>(5),
+#endif
+#ifdef ESPNOW
+		add_class<ESPNowButtons,ButtonSource>(6),
 #endif
 };
 #endif
