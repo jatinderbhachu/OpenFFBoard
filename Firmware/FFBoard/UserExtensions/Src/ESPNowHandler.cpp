@@ -78,6 +78,10 @@ void ESPNowHandler::send_connect_ack() {
   }
 }
 
+esp_err_t ESPNowHandler::send_data(const uint8_t *data, uint32_t len) {
+  return esp_now_send(mControllerAddress.data(), data, len);
+}
+
 void ESPNowHandler::espnow_recv_cb(const esp_now_recv_info_t *recv_info,
                                    const uint8_t *data, int len) {
   EventCallbackData event;

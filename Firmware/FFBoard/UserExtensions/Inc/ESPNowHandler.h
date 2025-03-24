@@ -44,6 +44,9 @@ public:
 
   void Run();
 
+  // returns esp_err_t on error
+  static esp_err_t send_data(const uint8_t *data, uint32_t len);
+
   static void register_recv_queue(QueueHandle_t queue);
   // static void unregister_recv_queue(QueueHandle_t queue);
 
@@ -51,6 +54,8 @@ public:
     static ESPNowHandler handler;
     return &handler;
   }
+
+  inline static bool is_connected() { return mConnected; }
 
 private:
   void add_client(const uint8_t *address);
@@ -63,8 +68,8 @@ private:
 
 private:
   inline static std::vector<QueueHandle_t> sRegisteredQueues = {};
-  bool mConnected = false;
-  std::array<uint8_t, ESP_NOW_ETH_ALEN> mControllerAddress;
+  inline static bool mConnected = false;
+  inline static std::array<uint8_t, ESP_NOW_ETH_ALEN> mControllerAddress = {};
 };
 
 #endif /* USEREXTENSIONS_SRC_ESPNOW_H_ */

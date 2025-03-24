@@ -63,15 +63,18 @@ void ESPNowAnalog::Run() {
       continue;
     }
 
-    uint8_t *data = &event.receive.data[0];
-    CmdType cmd_type = static_cast<CmdType>(data[0]);
+    CmdType cmd_type = static_cast<CmdType>(event.receive.data[0]);
+    uint8_t *data = &event.receive.data[1];
     uint8_t *address = event.receive.mac_addr;
 
     switch (event.type) {
     case EventType::Receive: {
-      if (cmd_type == CmdType::EncoderPos) {
-        this->buf[0] = UINT16_MAX - (*(uint16_t *)&data[0]);
-        this->buf[1] = (*(uint16_t *)&data[0]);
+      if (cmd_type == CmdType::ControllerState) {
+        const ControllerState *controller_state =
+            reinterpret_cast<const ControllerState *>(&data[0]);
+
+        this->buf[0] = controller_state->axis1;
+        this->buf[1] = controller_state->axis2;
       }
     } break;
     case EventType::Send: {

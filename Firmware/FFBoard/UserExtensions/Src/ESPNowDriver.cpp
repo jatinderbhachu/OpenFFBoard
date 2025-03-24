@@ -6,6 +6,7 @@
  */
 #include "target_constants.h"
 #ifdef ESPNOW
+#include "esp_err.h"
 #include "esp_log.h"
 #include "esp_now.h"
 #include "esp_timer.h"
@@ -76,15 +77,17 @@ void ESPNowDriver::Run() {
       continue;
     }
 
-    uint8_t *data = &event.receive.data[0];
-    CmdType cmd_type = static_cast<CmdType>(data[0]);
+    CmdType cmd_type = static_cast<CmdType>(event.receive.data[0]);
+    uint8_t *data = &event.receive.data[1];
     uint8_t *address = event.receive.mac_addr;
 
     switch (event.type) {
     case EventType::Receive: {
-      if (cmd_type == CmdType::EncoderPos) {
-        float pos = *(float *)&data[1];
-        mPos = pos;
+      if (cmd_type == CmdType::ControllerState) {
+        const ControllerState *controller_state =
+            reinterpret_cast<const ControllerState *>(&data[0]);
+
+        mPos = controller_state->encoder_angle;
         mPosUpdateAvg.addValue((uint32_t)(HAL_GetTick() - mLastPosUpdate));
         mLastPosUpdate = HAL_GetTick();
       }
@@ -112,7 +115,7 @@ void ESPNowDriver::setPos(int32_t pos) {
 float ESPNowDriver::getPos_f() { return mPos / (2.0f * M_PI); }
 
 bool ESPNowDriver::motorReady() {
-  if (!mConnected) {
+  if (!ESPNowHandler::get()->is_connected()) {
     return false;
   }
 
@@ -133,9 +136,9 @@ void ESPNowDriver::turn(int16_t power) {
 
   // ESP_LOGI(TAG, "turn %d\n", power);
 
-  if (esp_now_send(mControllerAddress.data(), &send_buf[0], send_len) !=
-      ESP_OK) {
-    // const auto& address = mControllerAddress;
+  auto err = ESPNowHandler::get()->send_data(&send_buf[0], send_len);
+  if (err != ESP_OK) {
+    // ESP_LOGE(TAG, "Failed to send torque value %s", esp_err_to_name(err));
     // ESP_LOGE(TAG, "Send error, turn(), dst = %02X:%02X:%02X:%02X:%02X:%02X",
     // address[0],
     //         address[1], address[2], address[3], address[4], address[5]);

@@ -63,7 +63,6 @@ public:
   };
 
 private:
-  bool mConnected = false;
   float mPos = 0.0f;
   float mPosOffset = 0.0f;
   float mLastOPos = 0.0f;
@@ -72,8 +71,6 @@ private:
   uint64_t mLastPosUpdate = 0;
   FastMovingAverage<float> mTorqueUpdateAvg{40};
   uint64_t mLastTorqueUpdate = 0;
-
-  std::array<uint8_t, ESP_NOW_ETH_ALEN> mControllerAddress;
 };
 
 /**
