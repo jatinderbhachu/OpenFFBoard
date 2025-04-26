@@ -13,6 +13,7 @@
 #include "ODriveCAN.h"
 #include "MotorSimplemotion.h"
 #include "RmdMotorCAN.h"
+#include "ESBDriver.h"
 
 //////////////////////////////////////////////
 /*
@@ -51,6 +52,9 @@ const std::vector<class_entry<MotorDriver>> Axis::axis1_drivers =
 #endif
 #ifdef RMDCAN
 	add_class<RmdMotorCAN1,MotorDriver>(11),
+#endif
+#ifdef ESB_CONNECTION
+		add_class<ESBDriver,MotorDriver>(13),
 #endif
 };
 

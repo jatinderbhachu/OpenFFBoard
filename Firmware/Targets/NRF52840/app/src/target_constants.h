@@ -30,7 +30,7 @@
 // Main classes
 #define FFBWHEEL
 #define FFBJOYSTICK
-#define ESB_CONNECTION 1
+#define ESB_CONNECTION
 //  #define MIDI
 //  #define TMCDEBUG
 //  #define CANBRIDGE

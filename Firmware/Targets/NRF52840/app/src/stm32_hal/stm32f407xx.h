@@ -36,6 +36,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
+#if 0
 
 /** @addtogroup Configuration_section_for_CMSIS
   * @{
@@ -58,7 +59,6 @@ extern "C" {
   * @{
   */
 
-#if 0
 /**
  * @brief STM32F4XX Interrupt Number Definition, according to the selected device
  *        in @ref Library_configuration_section

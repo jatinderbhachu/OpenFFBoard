@@ -58,6 +58,7 @@ enum class ClassType : uint16_t {
 #define CLSID_ANALOG_LOCAL 	0x41
 #define CLSID_ANALOG_CAN	0x42
 #define CLSID_ANALOG_ADS111X	0x43
+#define CLSID_ANALOG_ESB 	0x44
 
 // Encoders
 #define CLSID_ENCODER_NONE	0x60
@@ -80,6 +81,7 @@ enum class ClassType : uint16_t {
 #define CLSID_MOT_SM2		0x8A
 #define CLSID_MOT_RMD1		0x8B
 #define CLSID_MOT_RMD2		0x8C
+#define CLSID_MOT_ESB		0x8D
 
 // Internal classes
 #define CLSID_AXIS			0xA01
@@ -88,6 +90,7 @@ enum class ClassType : uint16_t {
 
 #define CLSID_CANPORT		0xC01
 #define CLSID_I2CPORT		0xC02
+#define CLSID_ESB			0xC03
 
 #define CLSID_CUSTOM		0x539 // Reserved for testing
 
