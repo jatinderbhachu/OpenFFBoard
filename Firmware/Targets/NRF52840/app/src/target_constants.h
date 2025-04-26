@@ -19,7 +19,8 @@
 #define HW_TYPE_INT 2
 #define FW_DEVID 0x413 // F407
 
-#define M_PI 3.14
+// see: https://github.com/zephyrproject-rtos/zephyr/issues/66909
+#define M_PI   3.14159265358979323846264338327950288
 
 #ifdef __cplusplus
 #endif
