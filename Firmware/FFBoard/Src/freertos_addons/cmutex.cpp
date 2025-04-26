@@ -114,13 +114,6 @@ bool MutexRecursive::Unlock()
 #endif
 
 
-LockGuard::LockGuard(Mutex& m)
-    : mutex(m)
-{
-    mutex.Lock();
-}
-
-
 LockGuard::~LockGuard()
 {
     mutex.Unlock();

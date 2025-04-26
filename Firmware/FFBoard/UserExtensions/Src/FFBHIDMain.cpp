@@ -12,7 +12,7 @@
 #include "usb_hid_ffb_desc.h"
 
 #include "cmsis_os.h"
-extern osThreadId_t defaultTaskHandle;
+// extern osThreadId_t defaultTaskHandle;
 
 //////////////////////////////////////////////
 

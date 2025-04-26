@@ -214,14 +214,15 @@ CommandStatus SystemCommands::internalCommand(const ParsedCommand& cmd,std::vect
 
 		case FFBoardMain_commands::mallinfo: // UNUSED since freertos
 		{
+			// see issue: https://github.com/zephyrproject-rtos/zephyr/issues/59424
 			CommandReply reply;
-			struct mallinfo info = mallinfo();
-			reply.adr = info.uordblks;
-			reply.val = info.uordblks;
+			// struct mallinfo info = mallinfo();
+			// reply.adr = info.uordblks;
+			// reply.val = info.uordblks;
 			reply.reply +="Usage: ";
-			reply.reply += std::to_string(info.uordblks);
-			reply.reply +=" Size: ";
-			reply.reply +=std::to_string(info.arena);
+			// reply.reply += std::to_string(info.uordblks);
+			// reply.reply +=" Size: ";
+			// reply.reply +=std::to_string(info.arena);
 			reply.type = CommandReplyType::STRING_OR_DOUBLEINT;
 			replies.push_back(reply);
 			break;
