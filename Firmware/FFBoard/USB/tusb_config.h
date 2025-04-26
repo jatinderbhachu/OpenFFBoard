@@ -36,7 +36,7 @@
 
 // defined by board.mk
 
-#define CFG_TUSB_MCU OPT_MCU_STM32F4 // target config
+#define CFG_TUSB_MCU OPT_MCU_NRF5X // target config
 #ifndef CFG_TUSB_MCU
   #error CFG_TUSB_MCU must be defined
 #endif
@@ -61,7 +61,9 @@
 #define CFG_TUSB_RHPORT0_MODE     (OPT_MODE_DEVICE | BOARD_DEVICE_RHPORT_SPEED)
 
 
-#define CFG_TUSB_OS               OPT_OS_FREERTOS
+#define CFG_TUSB_OS               OPT_OS_ZEPHYR
+
+#define CFG_TUD_ENABLED 1
 
 // CFG_TUSB_DEBUG is defined by compiler in DEBUG build
 // #define CFG_TUSB_DEBUG           0
