@@ -89,7 +89,7 @@ void cppmain() {
 
   while (running) {
     mainclass->update();
-    wdt_feed(wdt, wdt_channel_id);
+    // wdt_feed(wdt, wdt_channel_id);
     k_sleep(K_TIMEOUT_ABS_TICKS(1));
   }
 }
