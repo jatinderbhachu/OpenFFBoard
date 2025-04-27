@@ -44,18 +44,8 @@ void ESBDriver::restoreFlash() {}
 void ESBDriver::saveFlash() {}
 
 void ESBDriver::Run() {
-  float dir = 0.01f;
   while (true) {
-#if 0
     mPos = ESBConnection::get()->controller_state.encoder_angle;
-#else
-    // mPos = sin(k_uptime_get() / 200.0f);
-    mPos += dir;
-
-    if (abs(mPos) > 1.0f) {
-      dir *= -1.0f;
-    }
-#endif
     k_sleep(K_USEC(500));
   }
 }

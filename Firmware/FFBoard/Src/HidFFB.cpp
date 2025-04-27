@@ -45,7 +45,11 @@ bool HidFFB::getFfbActive(){
 }
 
 bool HidFFB::HID_SendReport(uint8_t *report,uint16_t len){
-	return tud_hid_report(0, report, len); // ID 0 skips ID field
+	__disable_irq();
+
+	bool ret = tud_hid_report(0, report, len); // ID 0 skips ID field
+	__enable_irq();
+	return ret;
 }
 
 

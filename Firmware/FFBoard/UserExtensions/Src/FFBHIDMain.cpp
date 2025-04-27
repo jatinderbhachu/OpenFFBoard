@@ -261,12 +261,11 @@ void FFBHIDMain::send_report(){
 	 */
 	if( (reportSendCounter > 100/usb_report_rate || (memcmp(&lastReportHID,&reportHID,sizeof(reportHID_t)) != 0) ))
 	{
-
-
-	tud_hid_report(0, reinterpret_cast<uint8_t*>(&reportHID), sizeof(reportHID_t));
-	lastReportHID = reportHID;
-	reportSendCounter = 0;
-
+		__disable_irq();
+		tud_hid_report(0, reinterpret_cast<uint8_t*>(&reportHID), sizeof(reportHID_t));
+		lastReportHID = reportHID;
+		reportSendCounter = 0;
+		__enable_irq();
 	}
 
 }

@@ -102,12 +102,11 @@ void ESBConnection::restoreFlash() {}
 void ESBConnection::saveFlash() {}
 
 void ESBConnection::Run() {
-
   struct esb_payload payload;
   while (true) {
     k_msgq_get(&esb_msgq, &payload, K_FOREVER);
     controller_state = *reinterpret_cast<ControllerState *>(payload.data);
-    Delay(100);
+    k_sleep(K_USEC(100));
   }
 }
 
