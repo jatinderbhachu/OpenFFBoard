@@ -43,6 +43,7 @@ namespace cpp_freertos
                                     this, nullptr, nullptr,
                                     // priority, K_USER | K_INHERIT_PERMS, K_NO_WAIT);
                                     priority, 0, K_NO_WAIT);
+        k_thread_name_set (thread_id, name.c_str());
         started = true;
     }
 

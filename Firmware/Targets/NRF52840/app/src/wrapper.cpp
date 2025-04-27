@@ -18,11 +18,12 @@ size_t xPortGetMinimumEverFreeHeapSize()
 
 uint32_t HAL_RCC_GetHCLKFreq(void)
 {
-    return 64 * 1000 * 1000;
+    return 16000000;
 }
 
 void RebootDFU()
 {
+    printf("%s\n", __FUNCTION__);
 }
 
 HAL_StatusTypeDef HAL_FLASH_Unlock()
@@ -104,7 +105,7 @@ void HAL_Delay(uint32_t Delay)
 
 uint32_t HAL_GetTick(void)
 {
-    return k_cycle_get_32();
+    return k_cyc_to_ms_floor32(k_cycle_get_32());
 }
 
 uint32_t HAL_GetTickPrio(void)

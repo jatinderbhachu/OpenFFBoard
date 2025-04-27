@@ -17,7 +17,6 @@ static void power_event_handler(nrfx_power_usb_evt_t event) {
 }
 
 void USBD_IRQHandler(void) { tud_int_handler(0); }
-// void USBD_IRQHandler(void) { tusb_int_handler(0, true); }
 
 enum {
   USB_EVT_DETECTED = 0,
@@ -31,7 +30,7 @@ void init_usb() {
               USBD_IRQHandler, 0);
   irq_enable(DT_INST_IRQN(0));
 
-  // NVIC_SetPriority(USBD_IRQn, 2);
+  NVIC_SetPriority(USBD_IRQn, 2);
 
   uint32_t usb_reg;
   usb_reg = NRF_POWER->USBREGSTATUS;

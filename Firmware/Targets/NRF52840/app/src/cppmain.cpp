@@ -27,78 +27,71 @@ ClassChooser<FFBoardMain> mainchooser(class_registry);
 StackType_t usb_device_stack[USBD_STACK_SIZE];
 StaticTask_t usb_device_taskdef;
 
-void cppmain()
-{
-	printf("cppmain\n");
+void cppmain() {
+  printf("cppmain\n");
 
 #ifdef FW_DEVID
-	if (HAL_GetDEVID() != FW_DEVID)
-	{
-		/**
-		 * Firmware is not intended for this chip!
-		 * This can be caused by accidentially flashing an incorrect firmware file
-		 * and likely screws up clock and pin configs Do not proceed.
-		 */
-		while (true)
-		{ // Block forever to prevent an incorrect firmware from
-		  // damaging hardware
-			Error_Handler();
-		}
-	}
+  if (HAL_GetDEVID() != FW_DEVID) {
+    /**
+     * Firmware is not intended for this chip!
+     * This can be caused by accidentially flashing an incorrect firmware file
+     * and likely screws up clock and pin configs Do not proceed.
+     */
+    while (true) { // Block forever to prevent an incorrect firmware from
+                   // damaging hardware
+      Error_Handler();
+    }
+  }
 #endif
 
-	// Flash init
-	if (!Flash_Init())
-	{
-		Error_Handler();
-	}
+  // Flash init
+  if (!Flash_Init()) {
+    Error_Handler();
+  }
 
-	// Check if flash is initialized
-	uint16_t lastFlashVersion = 0;
-	if (!Flash_Read(ADR_FLASH_VERSION, &lastFlashVersion))
-	{ // Version never written
-		Flash_Write(ADR_FLASH_VERSION, FLASH_VERSION);
-	}
-	Flash_Read(ADR_FLASH_VERSION, &lastFlashVersion);
-	if (lastFlashVersion != FLASH_VERSION)
-	{
-		Flash_Format(); // Major version changed or could not write initial value. force a format
-		Flash_Write(ADR_FLASH_VERSION, FLASH_VERSION);
-	}
+  // Check if flash is initialized
+  uint16_t lastFlashVersion = 0;
+  if (!Flash_Read(ADR_FLASH_VERSION,
+                  &lastFlashVersion)) { // Version never written
+    Flash_Write(ADR_FLASH_VERSION, FLASH_VERSION);
+  }
+  Flash_Read(ADR_FLASH_VERSION, &lastFlashVersion);
+  if (lastFlashVersion != FLASH_VERSION) {
+    Flash_Format(); // Major version changed or could not write initial value.
+                    // force a format
+    Flash_Write(ADR_FLASH_VERSION, FLASH_VERSION);
+  }
 
-	// ------------------------
+  // ------------------------
 
-	// startADC(); // enable ADC DMA
+  // startADC(); // enable ADC DMA
 
-	// If switch pressed at boot select failsafe implementation
-	// #ifdef BTNFAILSAFE
-	// 	if(HAL_GPIO_ReadPin(BUTTON_A_GPIO_Port, BUTTON_A_Pin) == 1){
-	// 		main_id = 0;
-	// 	}else
-	// #endif
-	if (!Flash_ReadWriteDefault(ADR_CURRENT_CONFIG, &main_id, DEFAULTMAIN))
-	{
-		Error_Handler();
-	}
+  // If switch pressed at boot select failsafe implementation
+  // #ifdef BTNFAILSAFE
+  // 	if(HAL_GPIO_ReadPin(BUTTON_A_GPIO_Port, BUTTON_A_Pin) == 1){
+  // 		main_id = 0;
+  // 	}else
+  // #endif
+  if (!Flash_ReadWriteDefault(ADR_CURRENT_CONFIG, &main_id, DEFAULTMAIN)) {
+    Error_Handler();
+  }
 
-	PersistentStorage::restoreFlashStartupCb(); // Flash is initialized. allow restoring now
+  PersistentStorage::restoreFlashStartupCb(); // Flash is initialized. allow
+                                              // restoring now
 
-	// main_id = 1; // ffbwheel
-	mainclass = mainchooser.Create(main_id);
-	if (mainclass == nullptr)
-	{									   // invalid id
-		mainclass = mainchooser.Create(0); // Baseclass
-	}
-	mainclassChosen = true;
+  mainclass = mainchooser.Create(main_id);
+  if (mainclass == nullptr) {          // invalid id
+    mainclass = mainchooser.Create(0); // Baseclass
+  }
+  mainclassChosen = true;
 
-	mainclass->usbInit(); // Let mainclass initialize usb
+  mainclass->usbInit(); // Let mainclass initialize usb
 
-	while (running)
-	{
-		// printf("running\n");
-		mainclass->update();
-		k_sleep(K_TIMEOUT_ABS_TICKS(1));
-	}
+  while (running) {
+    mainclass->update();
+    wdt_feed(wdt, wdt_channel_id);
+    k_sleep(K_TIMEOUT_ABS_TICKS(1));
+  }
 }
 
 /**
@@ -108,17 +101,17 @@ void cppmain()
  * defined as that timer. Alternatively an actual freerunning 32b can be defined
  * as TIM_MICROS to use its count directly. Otherwise the cyclecounter is used.
  */
-uint32_t micros()
-{
-#ifdef TIM_MICROS_HALTICK
-	extern TIM_HandleTypeDef TIM_MICROS_HALTICK;
-	return (HAL_GetTick() * 1000) + TIM_MICROS_HALTICK.Instance->CNT;
-#elif defined(TIM_MICROS)
-	extern TIM_HandleTypeDef TIM_MICROS;
-	return TIM_MICROS.Instance->CNT;
-#else
-	return DWT->CYCCNT / clkmhz;
-#endif
+uint32_t micros() {
+  // #ifdef TIM_MICROS_HALTICK
+  // 	extern TIM_HandleTypeDef TIM_MICROS_HALTICK;
+  // 	return (HAL_GetTick() * 1000) + TIM_MICROS_HALTICK.Instance->CNT;
+  // #elif defined(TIM_MICROS)
+  // 	extern TIM_HandleTypeDef TIM_MICROS;
+  // 	return TIM_MICROS.Instance->CNT;
+  // #else
+  // 	return DWT->CYCCNT / clkmhz;
+  // #endif
+  return HAL_GetTick();
 }
 
 /**

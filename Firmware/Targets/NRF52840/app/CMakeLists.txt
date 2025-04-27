@@ -49,8 +49,6 @@ target_include_directories(
 
     src/dummy_includes
     src/freertos_wrappers
-    ../../../F407VG/Drivers/STM32F4xx_HAL_Driver/Inc
-    ../../../F407VG/Drivers/CMSIS/Device/ST/STM32F4xx/Include
 )
 
 target_sources(
