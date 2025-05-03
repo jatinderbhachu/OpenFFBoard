@@ -12,12 +12,13 @@
 #include "thread.hpp"
 
 #ifdef ESB_CONNECTION
-#define ESB_THREAD_MEM 512
+#define ESB_THREAD_MEM 1024
 #define ESB_THREAD_PRIO 25 // Must be higher than main thread
 
 enum class ESBConnection_commands : uint32_t {
   list_available_devices,
   rx_rate,
+  tx_rate,
 };
 
 struct ControllerState {
@@ -48,6 +49,8 @@ public:
 
   void Run();
 
+  int send_data(uint8_t *data, uint32_t len);
+
   ControllerState controller_state;
 
   static ESBConnection *get() {
@@ -60,13 +63,6 @@ private:
   float mPos = 0.0f;
   float mPosOffset = 0.0f;
   float mLastOPos = 0.0f;
-
-  FastMovingAverage<float> mRXAvg{40};
-  uint32_t mLastRX = 0;
-  FastMovingAverage<float> mTXAvg{40};
-  uint32_t mLastTX = 0;
-  uint64_t mLastPosUpdate = 0;
-
 };
 
 #endif

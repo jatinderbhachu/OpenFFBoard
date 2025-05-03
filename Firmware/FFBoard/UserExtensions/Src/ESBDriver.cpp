@@ -55,7 +55,9 @@ CommandStatus ESBDriver::command(const ParsedCommand &cmd,
   return CommandStatus::OK;
 }
 
-void ESBDriver::turn(int16_t power) {}
+void ESBDriver::turn(int16_t power) {
+  int err = ESBConnection::get()->send_data((uint8_t*)&power, sizeof(power));
+}
 void ESBDriver::stopMotor() {}
 void ESBDriver::startMotor() {}
 Encoder *ESBDriver::getEncoder() { return this; }
