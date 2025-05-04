@@ -17,14 +17,10 @@ ClassIdentifier ESBAnalog::info = {
 };
 const ClassIdentifier ESBAnalog::getInfo() { return info; }
 
-ESBAnalog::ESBAnalog()
-    : CommandHandler("esb_analog", CLSID_ANALOG_ESB, 0),
-      Thread("ESB-ANALOG", ESB_ANALOG_THREAD_MEM, ESB_ANALOG_THREAD_PRIO) {
-
+ESBAnalog::ESBAnalog() : CommandHandler("esb_analog", CLSID_ANALOG_ESB, 0) {
   CommandHandler::registerCommands();
   restoreFlash();
   this->buf.resize(axes, 0);
-  Start();
 }
 
 ESBAnalog::~ESBAnalog() {}
@@ -44,17 +40,12 @@ int32_t mapRange(int32_t value, int32_t old_min, int32_t old_max,
          (value - old_min) * (new_max - new_min) / (old_max - old_min);
 }
 
-void ESBAnalog::Run() {
-  while (true) {
-    auto *esb_connection = ESBConnection::get();
+std::vector<int32_t> *ESBAnalog::getAxes() {
+  const ControllerState &state = ESBConnection::get_controller_state();
 
-    this->buf[0] = mapRange(esb_connection->controller_state.axis1, 0, 4096,
-                            INT16_MIN, INT16_MAX);
-    this->buf[1] = mapRange(esb_connection->controller_state.axis2, 0, 4096,
-                            INT16_MIN, INT16_MAX);
-
-    Delay(50);
-  }
+  this->buf[0] = mapRange(state.axis1, 0, 4096, INT16_MIN, INT16_MAX);
+  this->buf[1] = mapRange(state.axis2, 0, 4096, INT16_MIN, INT16_MAX);
+  return &this->buf;
 }
 
 #endif

@@ -58,6 +58,8 @@ public:
     return &handler;
   }
 
+  static ControllerState get_controller_state();
+
 private:
   bool mConnected = false;
   float mPos = 0.0f;

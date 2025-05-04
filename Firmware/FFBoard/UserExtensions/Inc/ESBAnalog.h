@@ -20,8 +20,7 @@
 #define ESB_ANALOG_THREAD_PRIO 25 // Must be higher than main thread
 
 class ESBAnalog : public AnalogSource,
-                  public CommandHandler,
-                  cpp_freertos::Thread {
+                  public CommandHandler {
 public:
 ESBAnalog();
   virtual ~ESBAnalog();
@@ -32,7 +31,7 @@ ESBAnalog();
   void restoreFlash();
   void saveFlash();
 
-  void Run();
+  std::vector<int32_t>* getAxes();
 
   CommandStatus command(const ParsedCommand &cmd,
                         std::vector<CommandReply> &replies);

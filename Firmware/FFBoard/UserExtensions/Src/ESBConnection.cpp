@@ -55,6 +55,13 @@ bool ESBConnection::isCreatable() {
                                 // by another axis
 }
 
+ControllerState ESBConnection::get_controller_state() {
+  unsigned int key = irq_lock();
+  ControllerState state = get()->controller_state;
+  irq_unlock(key);
+  return state;
+}
+
 void event_handler(struct esb_evt const *event) {
   switch (event->evt_id) {
   case ESB_EVENT_TX_SUCCESS:
@@ -65,14 +72,12 @@ void event_handler(struct esb_evt const *event) {
     break;
   case ESB_EVENT_RX_RECEIVED:
     if (esb_read_rx_payload(&rx_payload) == 0) {
-      while (k_msgq_put(&esb_recv_msgq, &rx_payload, K_NO_WAIT) != 0) {
-        /* message queue is full: purge old data & try again */
-        k_msgq_purge(&esb_recv_msgq);
-      }
+      ESBConnection::get()->controller_state =
+          *reinterpret_cast<ControllerState *>(rx_payload.data);
 
       s_RXAvg.addValue((uint32_t)(HAL_GetTick() - s_LastRX));
       s_LastRX = HAL_GetTick();
-      
+
       struct esb_payload ack_payload;
       if (k_msgq_get(&esb_send_msgq, &ack_payload, K_NO_WAIT) == 0) {
         esb_write_payload(&ack_payload);
@@ -130,9 +135,7 @@ void ESBConnection::saveFlash() {}
 void ESBConnection::Run() {
   struct esb_payload payload;
   while (true) {
-    k_msgq_get(&esb_recv_msgq, &payload, K_FOREVER);
-    controller_state = *reinterpret_cast<ControllerState *>(payload.data);
-    k_sleep(K_USEC(5));
+    k_sleep(K_MSEC(10000));
   }
 }
 
